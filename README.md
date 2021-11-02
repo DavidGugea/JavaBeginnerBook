@@ -45,3 +45,9 @@
 ## Chapter 22. Testing with JUnit
 
 ## Chapter 23. The tools of JDK
+
+---
+
+## Chapter 1. Java history and how it works
+
+The history of java and how the java environment works.
