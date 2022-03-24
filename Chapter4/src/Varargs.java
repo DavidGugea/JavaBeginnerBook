@@ -1,5 +1,3 @@
-import org.jetbrains.annotations.Contract;
-
 public class Varargs {
     public static void main(String[] args) {
         System.out.println(avg(1, 2, 3, 4, 5));
