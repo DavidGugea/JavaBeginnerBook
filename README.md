@@ -183,3 +183,160 @@ Good:
 ```Java
 sb.append(",").append(value);
 ```
+
+### Basic ```StringBuilder``` methods
+
+|Method|Description|
+|------|-----------|
+|```void setCharAt(int index, char ch)```|This method sets changes a char with the given char ```ch``` at the given index.|
+|```insert(...)```|You can insert different types of data-types inside this string.|
+|```delete(int start, int end)```|Deletes the substring from the given start to the given end > Removes the characters in a substring of this sequence.|
+|```deleteCharAt(int index)```|Removes a char at the specified index|
+|```replace(int start, int end, String str)```|Deletes the substring between ```start``` and ```end``` and adds the given String|
+|```reverse()```|Returns the reversed string|
+
+### The length and the capacity of a ```StringBuilder```
+
+Just like strings, ```StringBuilder``` objects have the ```length()``` method that gives you the number of chars in the String. In addition to that, ```StringBuilder``` objects also have an internal buffer and you can get its length using ```capacity()```. This buffer, which actually is just a char array, is used to store all the changes that you might make to the ```StringBuilder```. The capacity is the amount of storage available for newly inserted characters, beyond which an allocation will occur. The capacity can be equal or bigger than the length of the ```StringBuilder``` object. When the capacity is too small and we need to increase it, we change the internal buffer with a new char array. You can decrease the size of the internal buffer using ```trimToSize()```. It's better however to give the capacity of the ```StringBuilder``` when you initialize it since replacing the internal buffer with a new char array can be inefficient.
+
+You can change the length of a ```StringBuilder``` object using the ```setLength(int)``` method. If the given size is smaller than the current length then the String will just be cut to the given size.
+
+With the method ```ensureCapacity(int minimumCapacity)``` you can ensure that the size of the internal buffer remains at a minimum capacity.
+
+## The base type CharSequence
+
+![CharSequence Inheritance](ScreenshotsForNotes/Chapter5/CharSequenceInheritance.PNG)
+
+* ```char charAt(int index)```
+    * Returns the char at the specified index
+* ```int length()```
+    * Returns the length of the char sequence
+* ```CharSequence subSequence(int start, int end)```
+    * Returns the sub sequence between the specified ```start``` and ```end```
+* ```toString()```
+    * Returns the whole char sequence as a string
+
+
+## Converting between primitive types and strings
+
+In order to get the string representation of an object you can use ```String.valueOf()```.
+This is how this method is implemented internally:
+
+```Java
+public static String valueOf(Object obj){
+    return (obj == null) ? "null" : obj.toString();
+}
+```
+
+Use this methods to parse a string in different data types:
+
+|Class|Method|
+|-----|------|
+|```java.lang.Boolean```|```parseBoolean(String s)```|
+|```java.lang.Byte```|```parseByte(String s)```|
+|```java.lang.Short```|```parseShort(String s)```|
+|```java.lang.Integer```|```parseInteger(String s)```|
+|```java.lang.Long```|```parseLong(String s)```|
+|```java.lang.Double```|```parseDouble(String s)```|
+|```java.lang.Float```|```parseFloat(String s)```|
+
+For ```Integer``` and ```Long``` data types you can use the following methods to convert the numbers to a certain base inside the string:
+
+* ```static String toBinaryString(int i)```
+* ```static String toOctalString(int i)```
+* ```static String toHexString(int i)```
+* ```static String toString(int i, int radix)```
+    * Convert the given integer ```i``` into a string using the base ```radix```
+
+## Putting strings together
+
+* You can use the plus-operator to put strings together
+* You can use the ```.concat(String)``` method
+* The classes ```StringBuilder``` and ```StringBuffer``` work directly with append.
+
+### Using the ```StringJoiner``` to put strings together
+
+The class ```StringJoiner``` helps you concatenate strings together and use a separator.
+
+Example:
+
+```Java
+StringJoiner sj = new StringJoiner(", ");
+sj.add("1").add("2").add("3");
+System.out.println(sj.ToString()); // 1, 2, 3
+```
+
+In this example we added strings together using the ```.add(...)``` method.
+You can use ```merge(StringJoiner)``` to append the content from another ```StringJoiner```.
+
+### Infix, Prefix and Suffix
+
+Besides the option of giving a separator between the strings, you also have the additional option of adding a prefix and a suffix to the ```StringJoiner```:
+
+```Java
+StringJoiner sj = new StringJoiner(", ", "{", "}");
+```
+
+### All constructors and methods
+
+|Method/Constructor|Description|
+|------------------|-----------|
+|```StringJoiner(CharSequence delimiter)```|Constructs a StringJoiner with no characters in it, with no prefix or suffix, and a copy of the supplied delimiter.|
+|```StringJoiner(CharSequence delimiter, CharSequence prefix, CharSequence suffix)```|Constructs a StringJoiner with no characters in it using copies of the supplied prefix, delimiter and suffix.|
+|```StringJoiner add(CharSequence newElement)```|This method adds the given ```CharSequence``` to the contents of the ```StringJoiner```|
+|```StringJoiner merge(StringJoiner other)```|Adds the contents of the given StringJoiner without prefix and suffix as the next element if it is non-empty.|
+|```StringJoiner setEmptyValue(CharSequence emptyValue)```|Sets the sequence of characters to be used when determining the string representation of this StringJoiner and no elements have been added yet, that is, when it is empty.|
+|```int length()```|Returns the length of the String representation of this StringJoiner.|
+|```String toString()```|Returns the current value, consisting of the prefix, the values added so far separated by the delimiter, and the suffix, unless no elements have been added in which case, the prefix + suffix or the emptyValue characters are returned|
+
+## Splitting strings
+
+A toketoken is a part of a string that certain separators separate from other tokens.
+
+|Method|Description|
+|------|-----------|
+|```split(...)``` from ```String```|Splits the string using a delimiter|
+|```lines(...)``` from ```String```|Retruns a ```Stream<String>```|
+|```Scanner```|Can read input (also line by line)|
+|```StringTokenizer```|The string tokenizer class allows an application to break a string into tokens. This is from Java 1.0|
+|```BreakIterator```|The BreakIterator class implements methods for finding the location of boundaries in text. Instances of BreakIterator maintain a current position and scan over text returning the index of characters where boundaries occur. Internally, BreakIterator scans text using a CharacterIterator, and is thus able to scan text held by any object implementing that protocol.|
+
+
+### The ```Scanner``` class
+
+You can use the ```Scanner``` class to read files line by line or to split a string in tokens. A ```Scanner``` is more flexible than a ```StringTokenizer```.
+
+Example of reading a file line by line:
+
+```Java
+import java.io.IOException;
+import java.nio.charset.StandardCharsets;
+import java.nio.file.Paths;
+import java.util.Scanner;
+
+public class PrintAllLines {
+    public static void main(String[] args) throws IOException {
+        try(Scanner scanner = new Scanner(Paths.get("test.txt"), StandardCharsets.ISO_8859_1.name())){
+            while(scanner.hasNextLine()){
+                System.out.println(scanner.nextLine());
+            }
+        }
+    }
+}
+```
+
+## Formatting strings
+
+In order to format strings you have to know the following format specifiers that point to certain data types:
+
+|Specifier|Description|
+|---------|-----------|
+|```%n```|new line|
+|```%%```|percentage|
+|```%c```|Unicode character|
+|```%x```|Hexadecimal value|
+|```%f```|Float value|
+|```%b```|Boolean value|
+|```%s```|String value|
+|```%d```|Decimal number|
+|```%t```|Date and Time|
